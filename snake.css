@@ -1,0 +1,22 @@
+.row {
+	clear: both;
+}
+
+.cell {
+	float: left;
+	margin: 1px 1px 0px 0px;
+	background-color: #ededed;
+	height: 6px;
+	width:  6px;
+}
+
+#debug-panel {
+	width: 350px;
+	height: 300px;
+}
+#debug {
+	overflow: auto;
+	padding: 10px;
+	background-color: #dedede;
+	height: 100%;	
+}
