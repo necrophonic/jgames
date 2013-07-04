@@ -1,3 +1,8 @@
+body {
+	font-family: verdana;
+	font-size: 0.8em;
+}
+
 .row {
 	clear: both;
 }
@@ -10,13 +15,25 @@
 	width:  6px;
 }
 
+/* DEBUGGING THINGS */
+hr {
+	color: #ffffff;
+}
 #debug-panel {
-	width: 350px;
-	height: 300px;
+	width: 450px;
+	height: 350px;
 }
 #debug {
+	margin-right: 30px;
+	border-radius: 5px;
 	overflow: auto;
-	padding: 10px;
-	background-color: #dedede;
+	padding: 5px;
+	background-color: #ababab;
 	height: 100%;	
+}
+.debug-msg {
+	border-radius: 5px;
+	background-color: #dedede;
+	margin-bottom: 5px;
+	padding: 5px;
 }
