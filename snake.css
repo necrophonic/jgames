@@ -10,6 +10,7 @@ body {
 .cell {
 	float: left;
 	margin: 1px 1px 0px 0px;
+	border-radius: 1px;
 	background-color: #ededed;
 	height: 6px;
 	width:  6px;

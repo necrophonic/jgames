@@ -1,12 +1,28 @@
 var grid_size = 51; // Size for both X and Y axes
-var speed	  = 1000; // 1s
+var midpoint  = undefined;
+var speed	  = 100;
 var runner    = undefined; // Interval
+var snake	  = undefined; // Snake queue
+var grid      = undefined;
+var score	  = 0;
+
+var kill_count = 0;
+
+var snake_default_start_size = 3;
+var snake_initial_orientation = new Array( 0, -1 ); // Tail up
+
+var velocity = undefined; // Array x / y velocity
 
 /* One time set up called on page load
 */
 function init() {
 	debug("Initialise");
+	grid = document.getElementById("snake");
 	set_up_grid();
+	
+	midpoint = new Array( Math.ceil(grid_size/2), Math.ceil(grid_size/2) );
+
+	return;
 }
 
 // ----------------------------------------------------------------------------
@@ -15,6 +31,65 @@ function init() {
 */
 function new_game() {
 
+	// Create new snake
+	snake = new Array();
+	
+	for (var i=0; i<snake_default_start_size; i++) {
+		var x = midpoint[0] + snake_initial_orientation[0]*i;
+		var y = midpoint[1] + snake_initial_orientation[1]*i;
+		snake.push( coords_to_id(x,y) );
+		ink_cell( coords_to_id(x,y) );
+	}
+
+	score = 0;
+
+	velocity = new Array( 0, 1 ); // Start moving downwards
+
+	runner = setInterval("update();",speed);
+}
+
+// ----------------------------------------------------------------------------
+
+function update() {
+	kill_count++;
+	if (kill_count == 30) {
+		clearInterval(runner);
+	}
+	move_snake();	
+}
+
+// ----------------------------------------------------------------------------
+
+/* Move the snake as per velocity. We do this by unshifting to one end
+*  of the queue.
+*/
+function move_snake() {	
+	var head = id_to_coords( snake[0] ); // Current head
+
+	head[0] += velocity[0];
+	head[1] += velocity[1];
+
+	var new_head = coords_to_id(head[0],head[1]);
+	ink_cell(new_head);
+	snake.unshift(new_head);
+
+	// TODO check whether hit body
+
+	// TODO check whether head hit boundary
+
+	// TODO check whether hit fruit
+
+	clear_tail();
+
+	return;
+}
+
+// ----------------------------------------------------------------------------
+
+/* Remove the current tail cell
+*/
+function clear_tail() {	
+	rub_cell(snake.pop());
 }
 
 // ----------------------------------------------------------------------------
@@ -25,49 +100,39 @@ function new_game() {
 function coords_to_id(x,y) {
 	return y + "-" + x;
 }
-
-// ----------------------------------------------------------------------------
-
-function set_up_grid() {
-	debug("Set up grid");
-	var grid = document.getElementById("snake");
-
-	for (var y=0;y<grid_size;y++) {
-
-		var row = document.createElement("DIV");
-		row.setAttribute("class","row");
-
-		for (var x=0;x<grid_size;x++) {
-			
-			var cell = document.createElement("DIV");
-				cell.setAttribute("id",coords_to_id(x,y));
-				cell.setAttribute("class","cell");
-
-			row.appendChild(cell);
-
-		}
-		grid.appendChild(row);
-	}
-
+function id_to_coords(id) {
+	var coords = id.split("-");
+	return new Array(coords[1]*1,coords[0]*1); /// *1 ensure cast to actual ints
 }
 
 // ----------------------------------------------------------------------------
 
-/* Walk the entire grid, row by row, left to right, and perform the given function
-   on each cell as found.
-*/
-function walk_grid(func) {
+function ink_cell(id) {
+	var cell = document.getElementById(id);
+		cell.style.backgroundColor = "#555555";
+}
+function rub_cell(id) {
+	var cell = document.getElementById(id);
+		cell.style.backgroundColor = "#ededed"; // Move to css
+}
+
+// ----------------------------------------------------------------------------
+
+function set_up_grid() {
+	debug("Set up grid");	
 
 	for (var y=0;y<grid_size;y++) {
-		for (var x=0;x<grid_size;x++) {
+		var row = document.createElement("DIV");
+			row.setAttribute("class","row");
 
-			var cell_id = coords_to_id(x,y);
-			var cell    = document.getElementById(cell_id);
-			func(cell);
-
+		for (var x=0;x<grid_size;x++) {		
+			var cell = document.createElement("DIV");
+				cell.setAttribute("id",coords_to_id(x,y));
+				cell.setAttribute("class","cell");
+			row.appendChild(cell);
 		}
+		grid.appendChild(row);
 	}
-
 }
 
 // ----------------------------------------------------------------------------
@@ -79,4 +144,24 @@ function debug(msg) {
 	debug_area.innerHTML = current_text;
 	
 	return;
+}
+
+// ----------------------------------------------------------------------------
+
+/* Called by the key press event
+*/
+function navigate(e) {
+
+	// 119 up (w)
+	// 115 down (s)
+	// 97 left (a)
+	// 100 right (d)
+	var code = e.which || e.keyCode;
+
+	switch(code) {
+		case 119: velocity[0]= 0; velocity[1]=-1; break;
+		case 115: velocity[0]= 0; velocity[1]= 1; break;
+		case 97:  velocity[0]=-1; velocity[1]= 0; break;
+		case 100: velocity[0]=1;  velocity[1]= 0; break;
+	}
 }
