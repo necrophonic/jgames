@@ -151,17 +151,10 @@ function debug(msg) {
 /* Called by the key press event
 */
 function navigate(e) {
-
-	// 119 up (w)
-	// 115 down (s)
-	// 97 left (a)
-	// 100 right (d)
-	var code = e.which || e.keyCode;
-
-	switch(code) {
-		case 119: velocity[0]= 0; velocity[1]=-1; break;
-		case 115: velocity[0]= 0; velocity[1]= 1; break;
-		case 97:  velocity[0]=-1; velocity[1]= 0; break;
-		case 100: velocity[0]=1;  velocity[1]= 0; break;
+	switch(e.keyCode) {
+		case 38: case 87: velocity[0]= 0; velocity[1]=-1; break; // Up
+		case 40: case 83: velocity[0]= 0; velocity[1]= 1; break; // Down
+		case 37: case 65: velocity[0]=-1; velocity[1]= 0; break; // Left
+		case 39: case 68: velocity[0]=1;  velocity[1]= 0; break; // Right
 	}
 }
