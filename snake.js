@@ -52,7 +52,7 @@ function new_game() {
 
 function update() {
 	kill_count++;
-	if (kill_count == 30) {
+	if (kill_count == 100) {
 		clearInterval(runner);
 	}
 	move_snake();	
@@ -70,18 +70,46 @@ function move_snake() {
 	head[1] += velocity[1];
 
 	var new_head = coords_to_id(head[0],head[1]);
-	ink_cell(new_head);
-	snake.unshift(new_head);
-
+	
 	// TODO check whether hit body
 
 	// TODO check whether head hit boundary
+	if (has_hit_boundary(new_head)) {
+		debug("Hit wall!");
+		stop_game();
+	}
 
 	// TODO check whether hit fruit
+
+	ink_cell(new_head);
+	snake.unshift(new_head);
 
 	clear_tail();
 
 	return;
+}
+
+// ----------------------------------------------------------------------------
+
+function has_hit_boundary(proposed) {
+	var coords = id_to_coords(proposed);
+	var x = coords[0];
+	var y = coords[1];
+
+	debug("X is "+x);
+
+	if (x < 0 || x > grid_size-1 || y < 0 || y > grid_size-1) {
+		return true;
+	}
+	return false;
+}
+
+// ----------------------------------------------------------------------------
+
+function stop_game() {
+	if (runner) {
+		clearInterval(runner);
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -95,13 +123,13 @@ function clear_tail() {
 // ----------------------------------------------------------------------------
 
 /* Convert true coordinates to an ID string. The ID string is the concatenation of the
-	coords in order y -> x with a dash in between.
+	coords in order y -> x with a dot in between
 */
 function coords_to_id(x,y) {
-	return y + "-" + x;
+	return y + "." + x;
 }
 function id_to_coords(id) {
-	var coords = id.split("-");
+	var coords = id.split(".");
 	return new Array(coords[1]*1,coords[0]*1); /// *1 ensure cast to actual ints
 }
 
