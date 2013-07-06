@@ -5,18 +5,21 @@
 		<script type="text/javascript" src="snake.js"></script>
 		<link rel="stylesheet" href="snake.css"/>
 	</head>
-	<body onKeyDown="return navigate(event)">
+	<body onKeyDown="return read_key(event)">
 		<table>
 			<tr>
 				<td id="debug-panel"><div id="debug"></div></td>
 				<td><div id="snake"></div></td>
 			</tr>
 		</table>
+		<p>
+			Left: a or left arrow, Right: d or right arrow, Up: w or up arrow, Down: s or down arrow
+			<br>
+			New game: enter
+		</p>
 
 		<script type="text/javascript">
 			init();
-
-			new_game();
 		</script>
 	</body>
 </html>

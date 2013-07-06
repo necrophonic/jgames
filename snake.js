@@ -1,18 +1,20 @@
-var grid_size = 51; // Size for both X and Y axes
+var grid_size = 26; // Size for both X and Y axes
 var midpoint  = undefined;
 var speed	  = 100;
 var start_speed = 100;
+var acceleration = 3;
 var runner    = undefined; // Interval
 var snake	  = undefined; // Snake queue
 var grid      = undefined;
 var score	  = 0;
+var game_is_running = false;
 
 var fruit 	   = {}; // Only allowing single fruit for now
     fruit.alive	  	   = false;
 	fruit.position 	   = undefined;
 	fruit.life	  	   = 0;			// Time to live (decreases)
 	fruit.start_value  = 10;
-	fruit.likely	   = 10; // Percentage chance of spawning
+	fruit.likely	   = 50; // Percentage chance of spawning
 
 var snake_default_start_size = 3;
 var snake_initial_orientation = new Array( 0, -1 ); // Tail up
@@ -37,6 +39,10 @@ function init() {
 */
 function new_game() {
 
+	// Clear the grid down
+	for_each_cell( function(id) { rub_cell(id) });
+
+
 	// Create new snake
 	snake = new Array();
 	
@@ -44,13 +50,17 @@ function new_game() {
 		var x = midpoint[0] + snake_initial_orientation[0]*i;
 		var y = midpoint[1] + snake_initial_orientation[1]*i;
 		snake.push( coords_to_id(x,y) );
-		ink_cell( coords_to_id(x,y) );
+		ink_cell( coords_to_id(x,y), "black" );
 	}
 
 	score = 0;
 	speed = start_speed;
+	game_is_running = true;
 
 	velocity = new Array( 0, 1 ); // Start moving downwards
+
+	// Fruit
+	fruit.alive = false;
 
 	runner = setInterval("update();",speed);
 }
@@ -94,7 +104,7 @@ function move_snake() {
 		end_game();
 	}
 		
-	ink_cell(new_head);
+	ink_cell(new_head, "black");
 	snake.unshift(new_head);
 
 	if (!check_hit_fruit(new_head)) {
@@ -111,10 +121,17 @@ function check_hit_fruit(position) {
 	if (!fruit.alive) { return }
 
 	if (position == fruit.position) {		
+		fruit.alive = false;
 		score += fruit.value;
 
 		debug("Score: "+score);
-		speed--;
+		speed -= acceleration;
+		if (speed < 10) {
+			speed = 10;
+		}
+		clearInterval(runner);
+		runner = setInterval("update();",speed);		
+		
 		return true;
 	}
 
@@ -124,24 +141,20 @@ function check_hit_fruit(position) {
 // ----------------------------------------------------------------------------
 
 function spawn_fruit() {
-	debug("Fruit spawning");
 	// Randomly generate where to place the fruit
 	var rand_x = Math.floor(Math.random()*grid_size);
 	var rand_y = Math.floor(Math.random()*grid_size);
 
-	debug("Place new fruit at "+rand_x+","+rand_y);
-
 	fruit.position = coords_to_id(rand_x,rand_y);
 
 	// Check whether we're clasing with the snake!
-	if (in_snake(fruit.position)) {
-		debug("Fruit clash with snake");
+	if (in_snake(fruit.position)) {		
 		spawn_fruit();
 	}
 
-	ink_cell(fruit.position);
+	ink_cell(fruit.position,"red");
 
-	fruit.life  = 50;
+	fruit.life  = 150;
 	fruit.alive = true;
 	fruit.value = fruit.start_value;
 }
@@ -211,6 +224,8 @@ function end_game() {
 
 	debug("Final score "+score);
 	debug("Game stopped");
+
+	game_is_running = false;
 }
 
 // ----------------------------------------------------------------------------
@@ -236,9 +251,14 @@ function id_to_coords(id) {
 
 // ----------------------------------------------------------------------------
 
-function ink_cell(id) {
+function ink_cell(id,colour) {
 	var cell = document.getElementById(id);
+	if (colour == 'red') {
+		cell.style.backgroundColor = "#ee9999";
+	}
+	else {
 		cell.style.backgroundColor = "#555555";
+	}
 }
 function rub_cell(id) {
 	var cell = document.getElementById(id);
@@ -266,6 +286,17 @@ function set_up_grid() {
 
 // ----------------------------------------------------------------------------
 
+function for_each_cell(func) {
+	for (var y=0;y<grid_size;y++) {
+		for (var x=0;x<grid_size;x++) {	
+			var id = coords_to_id(x,y);
+			func(id);
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+
 function debug(msg) {
 	var debug_area = document.getElementById("debug");	
 	var current_text = debug_area.innerHTML;	
@@ -279,8 +310,17 @@ function debug(msg) {
 
 /* Called by the key press event
 */
-function navigate(e) {
+function read_key(e) {
 	switch(e.keyCode) {
+		case 13: if (game_is_running) {					
+					break;
+				 }
+				 else {
+				 	debug("Start new game");
+				 	new_game(); break;
+				 }
+
+
 		case 38: case 87: velocity[0]= 0; velocity[1]=-1; break; // Up
 		case 40: case 83: velocity[0]= 0; velocity[1]= 1; break; // Down
 		case 37: case 65: velocity[0]=-1; velocity[1]= 0; break; // Left
