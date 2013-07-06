@@ -1,12 +1,18 @@
 var grid_size = 51; // Size for both X and Y axes
 var midpoint  = undefined;
 var speed	  = 100;
+var start_speed = 100;
 var runner    = undefined; // Interval
 var snake	  = undefined; // Snake queue
 var grid      = undefined;
 var score	  = 0;
 
-var kill_count = 0;
+var fruit 	   = {}; // Only allowing single fruit for now
+    fruit.alive	  	   = false;
+	fruit.position 	   = undefined;
+	fruit.life	  	   = 0;			// Time to live (decreases)
+	fruit.start_value  = 10;
+	fruit.likely	   = 10; // Percentage chance of spawning
 
 var snake_default_start_size = 3;
 var snake_initial_orientation = new Array( 0, -1 ); // Tail up
@@ -42,6 +48,7 @@ function new_game() {
 	}
 
 	score = 0;
+	speed = start_speed;
 
 	velocity = new Array( 0, 1 ); // Start moving downwards
 
@@ -51,11 +58,21 @@ function new_game() {
 // ----------------------------------------------------------------------------
 
 function update() {
-	kill_count++;
-	if (kill_count == 100) {
-		clearInterval(runner);
-	}
+
 	move_snake();	
+
+	// Check to create fruit
+	if (!fruit.alive) {
+
+		var rand = Math.floor((Math.random()*100)+1);
+		if (rand <= fruit.likely) {
+			spawn_fruit();			
+		}
+
+	}
+	else {
+		decay_fruit();
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -76,28 +93,97 @@ function move_snake() {
 	if (has_hit_body(new_head) || has_hit_boundary(new_head)) {
 		end_game();
 	}
-
-	// TODO check whether hit fruit
-
+		
 	ink_cell(new_head);
 	snake.unshift(new_head);
 
-	clear_tail();
+	if (!check_hit_fruit(new_head)) {
+		// If we haven't eaten fruit, then let the end of the tail drop off.
+		clear_tail();
+	}
 
 	return;
 }
 
 // ----------------------------------------------------------------------------
 
+function check_hit_fruit(position) {
+	if (!fruit.alive) { return }
+
+	if (position == fruit.position) {		
+		score += fruit.value;
+
+		debug("Score: "+score);
+		speed--;
+		return true;
+	}
+
+	return false;
+}
+
+// ----------------------------------------------------------------------------
+
+function spawn_fruit() {
+	debug("Fruit spawning");
+	// Randomly generate where to place the fruit
+	var rand_x = Math.floor(Math.random()*grid_size);
+	var rand_y = Math.floor(Math.random()*grid_size);
+
+	debug("Place new fruit at "+rand_x+","+rand_y);
+
+	fruit.position = coords_to_id(rand_x,rand_y);
+
+	// Check whether we're clasing with the snake!
+	if (in_snake(fruit.position)) {
+		debug("Fruit clash with snake");
+		spawn_fruit();
+	}
+
+	ink_cell(fruit.position);
+
+	fruit.life  = 50;
+	fruit.alive = true;
+	fruit.value = fruit.start_value;
+}
+
+// ----------------------------------------------------------------------------
+
+function decay_fruit() {
+	fruit.life--;
+	//fruit.value = (fruit.start_value / 100 ) * fruit.life;
+	//debug("Fruit value "+fruit.value);
+
+	if (fruit.life == 0) {
+		rub_cell(fruit.position);
+		fruit.alive=false;
+	}
+}
+
+// ----------------------------------------------------------------------------
+
 function has_hit_body(proposed) {
+	var is_in = in_snake(proposed);
+	if (is_in) {
+		debug("Hit body!");
+		return true;
+	}
+	return false;
+}
+
+// ----------------------------------------------------------------------------
+
+/**
+* Check whether a given position is within the body of the snake
+* @param	position	string	position to be checked
+* @returns	true=in snake, false=not in snake
+*/
+function in_snake(position) {
 	for (var s=0; s<snake.length; s++) {
-		if (snake[s] == proposed) {
-			debug("Hit body!");
+		if (snake[s] == position) {			
 			return true;
 		}
 	}
-	
-	return false;
+	return false
 }
 
 // ----------------------------------------------------------------------------
@@ -123,6 +209,7 @@ function end_game() {
 
 	// TODO highscore
 
+	debug("Final score "+score);
 	debug("Game stopped");
 }
 
