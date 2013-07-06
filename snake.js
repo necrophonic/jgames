@@ -69,14 +69,12 @@ function move_snake() {
 	head[0] += velocity[0];
 	head[1] += velocity[1];
 
+	// Test the proposed new head position to see whether it's hit something
+	// nice or nasty.
 	var new_head = coords_to_id(head[0],head[1]);
-	
-	// TODO check whether hit body
-
-	// TODO check whether head hit boundary
-	if (has_hit_boundary(new_head)) {
-		debug("Hit wall!");
-		stop_game();
+		
+	if (has_hit_body(new_head) || has_hit_boundary(new_head)) {
+		end_game();
 	}
 
 	// TODO check whether hit fruit
@@ -91,14 +89,26 @@ function move_snake() {
 
 // ----------------------------------------------------------------------------
 
+function has_hit_body(proposed) {
+	for (var s=0; s<snake.length; s++) {
+		if (snake[s] == proposed) {
+			debug("Hit body!");
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+// ----------------------------------------------------------------------------
+
 function has_hit_boundary(proposed) {
 	var coords = id_to_coords(proposed);
 	var x = coords[0];
 	var y = coords[1];
 
-	debug("X is "+x);
-
 	if (x < 0 || x > grid_size-1 || y < 0 || y > grid_size-1) {
+		debug("Hit wall!");
 		return true;
 	}
 	return false;
@@ -106,10 +116,14 @@ function has_hit_boundary(proposed) {
 
 // ----------------------------------------------------------------------------
 
-function stop_game() {
+function end_game() {
 	if (runner) {
 		clearInterval(runner);
 	}
+
+	// TODO highscore
+
+	debug("Game stopped");
 }
 
 // ----------------------------------------------------------------------------
