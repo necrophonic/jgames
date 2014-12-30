@@ -1,0 +1,144 @@
+$pman-colour: rgb(252,236,50);
+$bg-colour: black;
+
+html {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  width: 100%;
+  background-color: rgb(100,100,100);
+  color: red;
+  font-size: 50px;
+}
+
+@mixin munch-step($deg1,$deg2) {
+  background-image:
+  linear-gradient($deg1, $pman-colour 50%, transparent 50%),
+  linear-gradient($deg2, transparent 50%, $pman-colour 50%);
+}
+
+@mixin munch-right() {
+  0%   { @include munch-step(150deg,210deg) }
+  25%  { @include munch-step(157deg,203deg) }
+  50%  { @include munch-step(165deg,195deg) }
+  75%  { @include munch-step(173deg,187deg) }
+  100% { @include munch-step(180deg,180deg) }
+}
+@keyframes munch-right { @include munch-right() }
+@-webkit-keyframes munch-right { @include munch-right() }
+
+@mixin munch-left() {
+  0%   { @include munch-step(210deg,150deg) }
+  25%  { @include munch-step(203deg,157deg) }
+  50%  { @include munch-step(195deg,165deg) }
+  75%  { @include munch-step(187deg,173deg) }
+  100% { @include munch-step(180deg,180deg) }
+}
+@keyframes munch-left { @include munch-left() }
+@-webkit-keyframes munch-left { @include munch-left() }
+
+@mixin munch-down() {
+  0%   { @include munch-step(120deg,60deg) }
+  25%  { @include munch-step(113deg,67deg) }
+  50%  { @include munch-step(105deg,75deg) }
+  75%  { @include munch-step(97deg, 83deg) }
+  100% { @include munch-step(90deg, 90deg) }
+}
+@keyframes munch-down { @include munch-down() }
+@-webkit-keyframes munch-down { @include munch-down() }
+
+@mixin munch-up() {
+  0%   { @include munch-step(60deg,120deg) }
+  25%  { @include munch-step(67deg,113deg) }
+  50%  { @include munch-step(75deg,105deg) }
+  75%  { @include munch-step(83deg, 97deg) }
+  100% { @include munch-step(90deg, 90deg) }
+}
+@keyframes munch-up { @include munch-up() }
+@-webkit-keyframes munch-up { @include munch-up() }
+
+@mixin pman-anim-munch($direction) {
+  animation:         $direction 0.2s linear 0s infinite alternate;
+  -webkit-animation: $direction 0.2s linear 0s infinite alternate;
+}
+
+#pman {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: $bg-colour;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: block;
+  //border: 2px solid $bg-colour;
+  padding: 0;
+  margin: 1px;
+}
+
+.pman-right {@include pman-anim-munch(munch-right)}
+.pman-left  {@include pman-anim-munch(munch-left)}
+.pman-up    {@include pman-anim-munch(munch-up)}
+.pman-down  {@include pman-anim-munch(munch-down)}
+
+#game-zone {
+  position: relative;
+  margin: 20px auto 0px auto;
+  height: 588px;
+  width:  588px;
+  border: 1px solid rgb(150,150,150);
+  box-shadow: 0px 0px 25px #000;
+  overflow: hidden;
+}
+
+#title-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:  100%;
+  height: 100%;
+  background-color: rgb(200,200,200);
+}
+
+#game-board {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:  100%;
+  height: 100%;
+  background-color: $bg-colour;
+  display: none;
+}
+
+#game-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.wall {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background-color: #aaaaff;
+  display: inline;
+}
+.pill {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: 9px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: inline;
+}
+.power-pill {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  margin: 6px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: inline;
+}

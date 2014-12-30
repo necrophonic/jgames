@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Pacman</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="pacman.js"></script>
+    <link rel="stylesheet" href="pacman.css" type="text/css">
+  </head>
+  <body onKeyDown="return read_key(event)">
+
+
+    <div id="game-zone">
+      <div id="title-screen">
+        <span id="game-title">Pacman</span>
+        <button id="new-game" onClick="start_game()">Start</button>
+      </div>
+      <div id="game-board">
+        <div id="game-canvas"></div>
+        <div id="pman"></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      $(function() {
+        init();
+      });
+    </script>
+
+  </body>
+</html>

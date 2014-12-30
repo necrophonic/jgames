@@ -1,0 +1,182 @@
+html {
+  padding: 0;
+  margin: 0; }
+
+body {
+  width: 100%;
+  background-color: #646464;
+  color: red;
+  font-size: 50px; }
+
+@keyframes munch-right {
+  0% {
+    background-image: linear-gradient(150deg, #fcec32 50%, transparent 50%), linear-gradient(210deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(157deg, #fcec32 50%, transparent 50%), linear-gradient(203deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(165deg, #fcec32 50%, transparent 50%), linear-gradient(195deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(173deg, #fcec32 50%, transparent 50%), linear-gradient(187deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(180deg, #fcec32 50%, transparent 50%), linear-gradient(180deg, transparent 50%, #fcec32 50%); } }
+@-webkit-keyframes munch-right {
+  0% {
+    background-image: linear-gradient(150deg, #fcec32 50%, transparent 50%), linear-gradient(210deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(157deg, #fcec32 50%, transparent 50%), linear-gradient(203deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(165deg, #fcec32 50%, transparent 50%), linear-gradient(195deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(173deg, #fcec32 50%, transparent 50%), linear-gradient(187deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(180deg, #fcec32 50%, transparent 50%), linear-gradient(180deg, transparent 50%, #fcec32 50%); } }
+@keyframes munch-left {
+  0% {
+    background-image: linear-gradient(210deg, #fcec32 50%, transparent 50%), linear-gradient(150deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(203deg, #fcec32 50%, transparent 50%), linear-gradient(157deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(195deg, #fcec32 50%, transparent 50%), linear-gradient(165deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(187deg, #fcec32 50%, transparent 50%), linear-gradient(173deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(180deg, #fcec32 50%, transparent 50%), linear-gradient(180deg, transparent 50%, #fcec32 50%); } }
+@-webkit-keyframes munch-left {
+  0% {
+    background-image: linear-gradient(210deg, #fcec32 50%, transparent 50%), linear-gradient(150deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(203deg, #fcec32 50%, transparent 50%), linear-gradient(157deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(195deg, #fcec32 50%, transparent 50%), linear-gradient(165deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(187deg, #fcec32 50%, transparent 50%), linear-gradient(173deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(180deg, #fcec32 50%, transparent 50%), linear-gradient(180deg, transparent 50%, #fcec32 50%); } }
+@keyframes munch-down {
+  0% {
+    background-image: linear-gradient(120deg, #fcec32 50%, transparent 50%), linear-gradient(60deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(113deg, #fcec32 50%, transparent 50%), linear-gradient(67deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(105deg, #fcec32 50%, transparent 50%), linear-gradient(75deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(97deg, #fcec32 50%, transparent 50%), linear-gradient(83deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(90deg, #fcec32 50%, transparent 50%), linear-gradient(90deg, transparent 50%, #fcec32 50%); } }
+@-webkit-keyframes munch-down {
+  0% {
+    background-image: linear-gradient(120deg, #fcec32 50%, transparent 50%), linear-gradient(60deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(113deg, #fcec32 50%, transparent 50%), linear-gradient(67deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(105deg, #fcec32 50%, transparent 50%), linear-gradient(75deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(97deg, #fcec32 50%, transparent 50%), linear-gradient(83deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(90deg, #fcec32 50%, transparent 50%), linear-gradient(90deg, transparent 50%, #fcec32 50%); } }
+@keyframes munch-up {
+  0% {
+    background-image: linear-gradient(60deg, #fcec32 50%, transparent 50%), linear-gradient(120deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(67deg, #fcec32 50%, transparent 50%), linear-gradient(113deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(75deg, #fcec32 50%, transparent 50%), linear-gradient(105deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(83deg, #fcec32 50%, transparent 50%), linear-gradient(97deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(90deg, #fcec32 50%, transparent 50%), linear-gradient(90deg, transparent 50%, #fcec32 50%); } }
+@-webkit-keyframes munch-up {
+  0% {
+    background-image: linear-gradient(60deg, #fcec32 50%, transparent 50%), linear-gradient(120deg, transparent 50%, #fcec32 50%); }
+  25% {
+    background-image: linear-gradient(67deg, #fcec32 50%, transparent 50%), linear-gradient(113deg, transparent 50%, #fcec32 50%); }
+  50% {
+    background-image: linear-gradient(75deg, #fcec32 50%, transparent 50%), linear-gradient(105deg, transparent 50%, #fcec32 50%); }
+  75% {
+    background-image: linear-gradient(83deg, #fcec32 50%, transparent 50%), linear-gradient(97deg, transparent 50%, #fcec32 50%); }
+  100% {
+    background-image: linear-gradient(90deg, #fcec32 50%, transparent 50%), linear-gradient(90deg, transparent 50%, #fcec32 50%); } }
+#pman {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: block;
+  padding: 0;
+  margin: 1px; }
+
+.pman-right {
+  animation: munch-right 0.2s linear 0s infinite alternate;
+  -webkit-animation: munch-right 0.2s linear 0s infinite alternate; }
+
+.pman-left {
+  animation: munch-left 0.2s linear 0s infinite alternate;
+  -webkit-animation: munch-left 0.2s linear 0s infinite alternate; }
+
+.pman-up {
+  animation: munch-up 0.2s linear 0s infinite alternate;
+  -webkit-animation: munch-up 0.2s linear 0s infinite alternate; }
+
+.pman-down {
+  animation: munch-down 0.2s linear 0s infinite alternate;
+  -webkit-animation: munch-down 0.2s linear 0s infinite alternate; }
+
+#game-zone {
+  position: relative;
+  margin: 20px auto 0px auto;
+  height: 588px;
+  width: 588px;
+  border: 1px solid #969696;
+  box-shadow: 0px 0px 25px #000;
+  overflow: hidden; }
+
+#title-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #c8c8c8; }
+
+#game-board {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: none; }
+
+#game-canvas {
+  width: 100%;
+  height: 100%; }
+
+.wall {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background-color: #aaaaff;
+  display: inline; }
+
+.pill {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: 9px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: inline; }
+
+.power-pill {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  margin: 6px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: inline; }
+
+/*# sourceMappingURL=pacman.css.map */
