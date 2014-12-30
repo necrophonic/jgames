@@ -6,11 +6,18 @@ var SCALING_X  = 28;
 var SCALING_Y  = 28;
 var GAME_SPEED = 175; // ms between ticks
 
+// Directional constants
 var LEFT  = 0;
 var RIGHT = 1;
 var UP    = 2;
 var DOWN  = 3;
 
+// Map constants
+var SPACE     = 0;
+var WALL      = 1;
+var PILL      = 2;
+var POWERPILL = 3;
+var GHOSTGATE = 4;
 
 
 var ref_board = $("#game-board");
@@ -69,7 +76,7 @@ function create_board() {
   board[5]  = [0,1,2,2,2,2,1,2,2,2,1,2,2,2,1,2,2,2,2,1,0];
   board[6]  = [0,1,1,1,1,2,1,1,1,0,1,0,1,1,1,2,1,1,1,1,0];
   board[7]  = [0,0,0,0,1,2,1,0,0,0,0,0,0,0,1,2,1,0,0,0,0];
-  board[8]  = [1,1,1,1,1,2,1,0,1,1,0,1,1,0,1,2,1,1,1,1,1];
+  board[8]  = [1,1,1,1,1,2,1,0,1,1,4,1,1,0,1,2,1,1,1,1,1];
   board[9]  = [0,0,0,0,0,2,0,0,1,0,0,0,1,0,0,2,0,0,0,0,0];
   board[10] = [1,1,1,1,1,2,1,0,1,1,1,1,1,0,1,2,1,1,1,1,1];
   board[11] = [0,0,0,0,1,2,1,0,0,0,0,0,0,0,1,2,1,0,0,0,0];
@@ -110,6 +117,12 @@ function create_board() {
           d.setAttribute("style","top: "+y*SCALING_Y+"; left: "+x*SCALING_X);
           $("#game-canvas").append(d);
           break;
+        case 4:
+          var d = document.createElement("DIV");
+          d.setAttribute("class","ghost-gate");
+          d.setAttribute("style","top: "+y*SCALING_Y+"; left: "+x*SCALING_X);
+          $("#game-canvas").append(d);
+          break;
       }
 
     }
@@ -124,10 +137,6 @@ function game_tick() {
 }
 
 function move_pman() {
-
-
-
-  // TODO check pills
 
   // TODO check ghosts
 
@@ -145,13 +154,13 @@ function move_pman() {
   // [WALL]
   // Look ahead to see if the potental move would be a wall. If so then
   // quit moving.
-  if (board[proposed.y][proposed.x]==1) {
+  if (board[proposed.y][proposed.x]==WALL || board[proposed.y][proposed.x]==GHOSTGATE) {
     return;
   }
 
   // [PILL]
   // Look underneath to see if it's a pill. If so collect it!
-  if (board[pman.celly][pman.cellx]==2) {
+  if (board[pman.celly][pman.cellx]==PILL) {
     board[pman.celly][pman.cellx] = 0; // Remove it
     $("#"+pman.celly+"-"+pman.cellx).hide(); // TODO look at efficiency - slows it down
     pman.score = pman.score + 10;
@@ -161,7 +170,7 @@ function move_pman() {
 
   // [POWER PILL]
   // Look underneath to see if it's a power pill. If so chug it!
-  if (board[pman.celly][pman.cellx]==3) {
+  if (board[pman.celly][pman.cellx]==POWERPILL) {
     board[pman.celly][pman.cellx] = 0; // Remove it
     $("#"+pman.celly+"-"+pman.cellx).hide(); // TODO look at efficiency - slows it down
     pman.score = pman.score + 50;
