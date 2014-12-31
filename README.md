@@ -1,7 +1,10 @@
 jgames
 ======
 
-Old school games implemented in pure javascript/jquery and css
+Old school games implemented in pure javascript/jquery and css just because.
+
+  * Snake
+  * Pacman
 
 Snake
 -----
@@ -21,3 +24,12 @@ Classic snake action! Eat the fruit and grow large, but watch out for your tail!
 * Add decaying fruit value
 * Add "special" fruit (speed up /slow down etc)
 * Add "nice" start / end screen with highscores
+
+Pacman
+------
+
+_In development_
+
+Simple implementation of pacman
+
+Early prototype so you can eat pills but nothing chases you!
