@@ -21,6 +21,7 @@ var GHOSTGATE = 4;
 
 
 var ref_board = $("#game-board");
+var pills = undefined; // Store references to pill elements
 
 var runner = undefined;
 
@@ -64,6 +65,7 @@ function reset_pman() {
 
 function create_board() {
   board = new Array(21,21);
+  pills = new Array();
 
   $("#game-canvas").empty();
 
@@ -109,6 +111,7 @@ function create_board() {
           d.setAttribute("id",y+"-"+x);
           d.setAttribute("style","top: "+y*SCALING_Y+"; left: "+x*SCALING_X);
           $("#game-canvas").append(d);
+          pills[y+"-"+x] = $("#"+y+"-"+x);
           break;
         case 3:
           var d = document.createElement("DIV");
@@ -162,21 +165,18 @@ function move_pman() {
   // Look underneath to see if it's a pill. If so collect it!
   if (board[pman.celly][pman.cellx]==PILL) {
     board[pman.celly][pman.cellx] = 0; // Remove it
-    $("#"+pman.celly+"-"+pman.cellx).hide(); // TODO look at efficiency - slows it down
-    pman.score = pman.score + 10;
+    $("#"+pman.celly+"-"+pman.cellx).hide();
     console.log("SCORE "+pman.score);
-    return;
   }
 
   // [POWER PILL]
   // Look underneath to see if it's a power pill. If so chug it!
   if (board[pman.celly][pman.cellx]==POWERPILL) {
     board[pman.celly][pman.cellx] = 0; // Remove it
-    $("#"+pman.celly+"-"+pman.cellx).hide(); // TODO look at efficiency - slows it down
+    $("#"+pman.celly+"-"+pman.cellx).hide();
     pman.score = pman.score + 50;
     console.log("SCORE "+pman.score);
     // TODO Trigger ghost chase
-    return;
   }
 
   pman.celly = proposed.y;
