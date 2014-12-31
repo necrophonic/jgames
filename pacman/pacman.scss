@@ -18,7 +18,6 @@ body {
   linear-gradient($deg1, $pman-colour 50%, transparent 50%),
   linear-gradient($deg2, transparent 50%, $pman-colour 50%);
 }
-
 @mixin munch-right() {
   0%   { @include munch-step(150deg,210deg) }
   25%  { @include munch-step(157deg,203deg) }
@@ -102,7 +101,7 @@ body {
   background-color: rgb(200,200,200);
 }
 
-#game-board {
+#game-canvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -110,11 +109,6 @@ body {
   height: 100%;
   background-color: $bg-colour;
   display: none;
-}
-
-#game-canvas {
-  width: 100%;
-  height: 100%;
 }
 
 .wall {
@@ -149,3 +143,19 @@ body {
   background-color: #ffffff;
   display: inline;
 }
+
+.ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50% 50% 0 0;
+  display: block;
+  padding: 0;
+  margin: 1px;
+}
+.inky   { background-color: #3333ff; }
+.blinky { background-color: #ff3333; }
+.pinky  { background-color: #ffbbbb; }
+.clyde  { background-color: #ffaa33; }
