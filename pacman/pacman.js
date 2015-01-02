@@ -2,7 +2,9 @@
 var game_is_running = false;
 var board = undefined;
 var runner = undefined;
+var ghost_names = ["inky","blinky","pinky","clyde"];
 var actors = new Array();
+var pill_count = 0;
 
 // General game constants
 var SCALING_X  = 28;
@@ -21,6 +23,11 @@ var WALL      = 1;
 var PILL      = 2;
 var POWERPILL = 3;
 var GHOSTGATE = 4;
+
+// NB. Actor classes are defined in their respective files
+// pacman_actor - base class
+// pacman_actor_pacman - player character
+// pacman_actor_ghost - ghost actors
 
 function init() {}
 
@@ -43,33 +50,40 @@ function start_game() {
 
 // Initialise the player pac man onto the board
 function init_pman() {
-  var pman = {};
-  pman.direction = LEFT;
-  pman.x = 10;
-  pman.y = 15;
-  pman.score = 0;
+
+  var pman = new Pacman();
+      pman.direction = LEFT;
+      pman.x = 10;
+      pman.y = 15;
+      pman.lives = 3;
+
   actors["pman"] = pman;
-  $('<div>',{id:"pman",class:"pman-left"}).appendTo('#game-canvas');
-  draw("pman");
+  pman.ref = $('<div>',{id:"pman",class:"pman-left"}).appendTo('#game-canvas');
+  pman.draw();
 }
 
 // Initialise the ghosts onto the board
 function init_ghosts() {
 
-  $('<div>',{id:"inky",  class:"ghost inky"}  ).appendTo('#game-canvas');
-  $('<div>',{id:"blinky",class:"ghost blinky"}).appendTo('#game-canvas');
-  $('<div>',{id:"pinky", class:"ghost pinky"} ).appendTo('#game-canvas');
-  $('<div>',{id:"clyde", class:"ghost clyde"} ).appendTo('#game-canvas');
+  ["inky","blinky","pinky","clyde"].map(function(name) {
+    var ghost = new Ghost(name);
+    ghost.ref = $('<div>',{id:name,  class:"ghost "+name}  ).appendTo('#game-canvas');
+    actors[name] = ghost;
+    ghost.draw();
+  });
 
-  actors['inky']    = { alive: true, x: 10, y: 9 };
-  actors['blinky']  = { alive: true, x: 9,  y: 9 };
-  actors['pinky']   = { alive: true, x: 11, y: 9 };
-  actors['clyde']   = { alive: true, x: 10, y: 7 };
-
-  draw( "inky" );
-  draw( "blinky" );
-  draw( "pinky" );
-  draw( "clyde" );
+  // TODO Replace with proper positional setup
+  actors['inky'].x    = 10;
+  actors['inky'].y    = 9;
+  actors['blinky'].x  = 9;
+  actors['blinky'].y  = 9;
+  actors['pinky'].x   = 11;
+  actors['pinky'].y   = 9;
+  actors['clyde'].x   = 10;
+  actors['clyde'].y   = 7;
+  ["inky","blinky","pinky","clyde"].map(function(name) {
+    actors[name].draw();
+  });
 
 }
 
@@ -80,6 +94,7 @@ function init_ghosts() {
 
 function create_board() {
   board = new Array(21,21);
+  pill_count = 0;
 
   $("#game-canvas").empty(); // Clear up anything from a previous game
 
@@ -95,8 +110,8 @@ function create_board() {
 
       switch(board[y][x]) {
         case 1: clss="wall";       break;
-        case 2: clss="pill";       break;
-        case 3: clss="power-pill"; break;
+        case 2: clss="pill";       pill_count++; break;
+        case 3: clss="power-pill"; pill_count++; break;
         case 4: clss="ghost-gate"; break;
       }
       $("<div>",{
@@ -108,111 +123,28 @@ function create_board() {
   }
 }
 
+function restart_after_player_death() {
+  // TODO needs to be triggered by event
+  // Move pman to start position
+  // Move ghosts to start position
+}
+
 // Main tick function - executed once for each time through the main game loop
 function game_tick() {
-  move_pman();
-  for (var actor in actors) {
-    draw(actor);
-  }
-}
-
-function move_pman() {
-
-  // Take a refence shorthand to keep the syntax clean as we'll be using
-  // pman a lot in this method!
-  pman = actors["pman"];
-
-  // TODO check ghosts
-
-  // Before performing the move, check where we propose to go.
-  // This allows us to check for wall hits before actually moving onto
-  // the wall space.
-  var proposed = {};
-      proposed.x = pman.x;
-      proposed.y = pman.y;
-
-  switch(pman.direction) {
-    case UP:    proposed.y = pman.y - 1; break;
-    case DOWN:  proposed.y = pman.y + 1; break;
-    case LEFT:  proposed.x = pman.x - 1; break;
-    case RIGHT: proposed.x = pman.x + 1; break;
-  }
-
-
-  // For checking collisions we look at the logical board map rather than
-  // trying visible collision detection.
-
-  // [WALL]
-  // Look ahead to see if the potental move would be a wall. If so then
-  // quit moving.
-  if (board[proposed.y][proposed.x]==WALL || board[proposed.y][proposed.x]==GHOSTGATE) {
-    return;
-  }
-
-  // [PILL]
-  // Look underneath to see if it's a pill. If so collect it!
-  if (board[pman.y][pman.x]==PILL) {
-    board[pman.y][pman.x] = 0; // Remove it
-    $("#"+pman.y+"-"+pman.x).hide();
-    pman.score = pman.score + 10;
-    console.log("SCORE "+pman.score);
-  }
-
-  // [POWER PILL]
-  // Look underneath to see if it's a power pill. If so chug it!
-  if (board[pman.y][pman.x]==POWERPILL) {
-    board[pman.y][pman.x] = 0; // Remove it
-    $("#"+pman.y+"-"+pman.x).hide();
-    pman.score = pman.score + 50;
-    console.log("SCORE "+pman.score);
-    // TODO Trigger ghost chase
-  }
-
-  // Now we've resolved collisions we actually move our player on screen.
-  pman.y = proposed.y;
-  pman.x = proposed.x;
-
-  // Warp - only occurs if board is open on edges and allows wrap around
-  // from one edge to another.
-  if (pman.x<0) { pman.x = 20 }
-  if (pman.x>20){ pman.x = 0  }
-  if (pman.y<0) { pman.y = 20 }
-  if (pman.y>20){ pman.y = 0  }
-
-  return;
-}
-
-function draw(actor_id) {
-  var actor = actors[actor_id];
-  var $selector = $("#"+actor_id);
-  $selector.css({left: actors[actor_id].x * SCALING_X});
-  $selector.css({top:  actors[actor_id].y * SCALING_Y});
-  return;
+  ["pman","pinky","inky","blinky","clyde"].map(function(name) {
+    actors[name].move();
+    actors[name].draw();
+  });
 }
 
 // Main key handling function
 function read_key(e) {
   if (game_is_running) {
     switch(e.keyCode) {
-        case 38: case 87: change_pman_direction(UP);    break; // W or up arrow
-        case 40: case 83: change_pman_direction(DOWN);  break; // S or down arrow
-        case 37: case 65: change_pman_direction(LEFT);  break; // A or left arrow
-        case 39: case 68: change_pman_direction(RIGHT); break; // D or right arrow
-    }
-  }
-}
-
-// Change player direction (only if not already going that way)
-function change_pman_direction(direction) {
-  var pman = actors["pman"];
-  if (direction != pman.direction) {
-    pman.direction = direction;
-    $("#pman").removeClass("pman-left pman-right pman-up pman-down");
-    switch (direction) {
-      case UP:    $("#pman").addClass("pman-up");    break;
-      case DOWN:  $("#pman").addClass("pman-down");  break;
-      case LEFT:  $("#pman").addClass("pman-left");  break;
-      case RIGHT: $("#pman").addClass("pman-right"); break;
+        case 38: case 87: actors["pman"].change_direction(UP);    break; // W or up arrow
+        case 40: case 83: actors["pman"].change_direction(DOWN);  break; // S or down arrow
+        case 37: case 65: actors["pman"].change_direction(LEFT);  break; // A or left arrow
+        case 39: case 68: actors["pman"].change_direction(RIGHT); break; // D or right arrow
     }
   }
 }

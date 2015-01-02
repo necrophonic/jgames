@@ -3,17 +3,26 @@
     <title>Pacman</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="pacman.js"></script>
+    <script src="pacman_actor.js"></script>
+    <script src="pacman_actor_pacman.js"></script>
+    <script src="pacman_actor_ghost.js"></script>
+
     <link rel="stylesheet" href="pacman.css" type="text/css">
   </head>
   <body onKeyDown="return read_key(event)">
 
 
-    <div id="game-zone">
+    <div id="main-container">
       <div id="title-screen">
-        <span id="game-title">Pacman</span>
-        <button id="new-game" onClick="start_game()">Start</button>
+        <div id="game-title">Pacman</div>
+        <div id="start-button"><button id="new-game" onClick="start_game()">Start</button></div>
       </div>
-      <div id="game-canvas"></div>
+      <div id="game-screen">
+        <div id="game-canvas"></div>
+        <div id="game-info">
+          Score: <span id="player-score"></span>
+        </div>
+      </div>
     </div>
 
     <script type="text/javascript">
